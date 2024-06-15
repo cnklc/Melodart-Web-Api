@@ -1,0 +1,78 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{12B3F91B-EEBF-4AAD-B387-35025BFBCEE7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SwordTech.Melodart.Application", "SwordTech.Melodart.Application", "{C0C3FFE3-7CEC-4BF3-9BBD-0BECFCFCAF1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwordTech.Melodart.Application", "SwordTech.Melodart.Application\SwordTech.Melodart.Application.csproj", "{44665943-3C0B-44BD-98AF-A442A7B4404A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwordTech.Melodart.Application.Contracts", "SwordTech.Melodart.Application.Contracts\SwordTech.Melodart.Application.Contracts.csproj", "{4E7A8792-D970-4CE1-A77D-6648F1D7A35C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SwordTech.Melodart.Domain", "SwordTech.Melodart.Domain", "{4581E400-4CEB-4283-8246-BDDF5075CE40}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwordTech.Melodart.Domain", "SwordTech.Melodart.Domain\SwordTech.Melodart.Domain.csproj", "{1BEC18FC-997E-4E29-91D8-7306CB1B1137}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwordTech.Melodart.Domain.Contracts", "SwordTech.Melodart.Domain.Contracts\SwordTech.Melodart.Domain.Contracts.csproj", "{B7A6350D-536A-4542-AE42-F0D13B8B69EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SwordTech.Melodart.Infrastructure", "SwordTech.Melodart.Infrastructure", "{A86DE401-2142-45E6-A7D0-A0774991890D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwordTech.Melodart.EFCore", "SwordTech.Melodart.EFCore\SwordTech.Melodart.EFCore.csproj", "{B6B8E83E-A273-44D4-9FF9-4C800C75895B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwordTech.Melodart.Helper", "SwordTech.Melodart.Helper\SwordTech.Melodart.Helper.csproj", "{0CAE7BAE-4A33-448F-A6CF-0BED16A14D9B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SwordTech.Melodart.Presantation", "SwordTech.Melodart.Presantation", "{57C4AC87-FEFA-4BE3-953A-5605383A7D22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwordTech.Melodart.Api", "SwordTech.Melodart.Api\SwordTech.Melodart.Api.csproj", "{6377DB98-70D3-44BA-BC63-CC67A89E72D0}"
+EndProject
+
+
+
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C0C3FFE3-7CEC-4BF3-9BBD-0BECFCFCAF1D} = {12B3F91B-EEBF-4AAD-B387-35025BFBCEE7}
+		{4581E400-4CEB-4283-8246-BDDF5075CE40} = {12B3F91B-EEBF-4AAD-B387-35025BFBCEE7}
+		{A86DE401-2142-45E6-A7D0-A0774991890D} = {12B3F91B-EEBF-4AAD-B387-35025BFBCEE7}
+		{57C4AC87-FEFA-4BE3-953A-5605383A7D22} = {12B3F91B-EEBF-4AAD-B387-35025BFBCEE7}
+		{44665943-3C0B-44BD-98AF-A442A7B4404A} = {C0C3FFE3-7CEC-4BF3-9BBD-0BECFCFCAF1D}
+		{4E7A8792-D970-4CE1-A77D-6648F1D7A35C} = {C0C3FFE3-7CEC-4BF3-9BBD-0BECFCFCAF1D}
+		{1BEC18FC-997E-4E29-91D8-7306CB1B1137} = {4581E400-4CEB-4283-8246-BDDF5075CE40}
+		{B7A6350D-536A-4542-AE42-F0D13B8B69EC} = {4581E400-4CEB-4283-8246-BDDF5075CE40}
+		{B6B8E83E-A273-44D4-9FF9-4C800C75895B} = {A86DE401-2142-45E6-A7D0-A0774991890D}
+		{0CAE7BAE-4A33-448F-A6CF-0BED16A14D9B} = {A86DE401-2142-45E6-A7D0-A0774991890D}
+		{6377DB98-70D3-44BA-BC63-CC67A89E72D0} = {57C4AC87-FEFA-4BE3-953A-5605383A7D22}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{44665943-3C0B-44BD-98AF-A442A7B4404A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44665943-3C0B-44BD-98AF-A442A7B4404A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44665943-3C0B-44BD-98AF-A442A7B4404A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44665943-3C0B-44BD-98AF-A442A7B4404A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E7A8792-D970-4CE1-A77D-6648F1D7A35C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E7A8792-D970-4CE1-A77D-6648F1D7A35C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E7A8792-D970-4CE1-A77D-6648F1D7A35C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E7A8792-D970-4CE1-A77D-6648F1D7A35C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BEC18FC-997E-4E29-91D8-7306CB1B1137}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BEC18FC-997E-4E29-91D8-7306CB1B1137}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BEC18FC-997E-4E29-91D8-7306CB1B1137}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BEC18FC-997E-4E29-91D8-7306CB1B1137}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7A6350D-536A-4542-AE42-F0D13B8B69EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7A6350D-536A-4542-AE42-F0D13B8B69EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7A6350D-536A-4542-AE42-F0D13B8B69EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7A6350D-536A-4542-AE42-F0D13B8B69EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6B8E83E-A273-44D4-9FF9-4C800C75895B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6B8E83E-A273-44D4-9FF9-4C800C75895B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6B8E83E-A273-44D4-9FF9-4C800C75895B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6B8E83E-A273-44D4-9FF9-4C800C75895B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CAE7BAE-4A33-448F-A6CF-0BED16A14D9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CAE7BAE-4A33-448F-A6CF-0BED16A14D9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CAE7BAE-4A33-448F-A6CF-0BED16A14D9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CAE7BAE-4A33-448F-A6CF-0BED16A14D9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6377DB98-70D3-44BA-BC63-CC67A89E72D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6377DB98-70D3-44BA-BC63-CC67A89E72D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6377DB98-70D3-44BA-BC63-CC67A89E72D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6377DB98-70D3-44BA-BC63-CC67A89E72D0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
