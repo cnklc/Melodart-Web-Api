@@ -1,25 +1,66 @@
+using SwordTech.Melodart.Api.Middlewares;
+using SwordTech.Melodart.Application;
+using SwordTech.Melodart.Application.Contract.Users;
+using SwordTech.Melodart.Application.Users;
+using SwordTech.Melodart.EFCore.EFCore;
+using SwordTech.Melodart.EFCore.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+ConfigureServices(builder.Services);
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+Configure(builder.Build()).Run();
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+void ConfigureServices(IServiceCollection services)
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    AddDI(services);
+    
+    AppStartup.ConfigureService(services);
+    
+    // Add services to the container.
+    services.AddControllers();
+
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    services.AddEndpointsApiExplorer();
+    services.AddSwaggerGen();
+    services.AddHealthChecks();
 }
 
-app.UseHttpsRedirection();
+WebApplication Configure(WebApplication app)
+{
+// Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
-app.UseAuthorization();
+    app.MapHealthChecks("/healthz");
 
-app.MapControllers();
+    // custom middlewares
+    app.UseLogginMiddleware();
+    app.UseErrorMiddleware();
+    // custom middlewares
 
-app.Run();
+    app.UseHttpsRedirection();
+
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    return app;
+}
+
+void AddDI(IServiceCollection services)
+{
+    
+    
+    services.AddDbContext<ServiceDbContext>();
+    
+    // repositories
+    services.AddTransient(typeof(IEfBaseRepository<>), typeof(EfBaseRepository<>));
+
+    // services
+    services.AddTransient<IUserAppService, UserAppService>();
+
+}

@@ -7,4 +7,9 @@
         <RootNamespace>SwordTech.Melodart.Application.Contract</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\SwordTech.Melodart.Domain\SwordTech.Melodart.Domain.csproj" />
+      <ProjectReference Include="..\SwordTech.Melodart.Helper\SwordTech.Melodart.Helper.csproj" />
+    </ItemGroup>
+
 </Project>
