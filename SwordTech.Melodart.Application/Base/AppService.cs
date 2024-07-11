@@ -5,9 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SwordTech.Melodart.Application.Contract.Base;
 using SwordTech.Melodart.EFCore.Repositories;
 using SwordTech.Melodart.Helper.Entity;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using SwordTech.Melodart.Application.Mapper;
 
 namespace SwordTech.Melodart.Application.Base;
 
@@ -65,23 +63,18 @@ public class AppService<TEntity, TListDto, TDetailDto, TCreateDto, TUpdateDto> :
         }
     }
 
-    public Task<bool> ResetPassword(string email)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<string> SaveImage(IHostEnvironment env, IFormFile file)
     {
-        var pathToSave = Path.Combine(env.ContentRootPath, "images");
-    
+        var pathToSave = Path.Combine(env.ContentRootPath, "wwwroot/images");
+
         var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
         var fullPath = Path.Combine(pathToSave, fileName);
-    
-        using (var stream = new FileStream(fullPath, FileMode.Create))
+
+        using (var stream = System.IO.File.Create(fullPath))
         {
             await file.CopyToAsync(stream);
         }
-    
+
         return fileName;
     }
 }

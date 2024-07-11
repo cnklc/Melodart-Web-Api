@@ -1,10 +1,10 @@
 using System.Security.Claims;
-using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
 using SwordTech.Melodart.Application.Base;
 using SwordTech.Melodart.Application.Contract.Users;
+using SwordTech.Melodart.Application.Contract.Users.Models;
 using SwordTech.Melodart.Domain.User;
 using SwordTech.Melodart.EFCore.Repositories;
 
@@ -15,7 +15,7 @@ public class UserAppService : AppService<AppUser, UserDto, UserDto, UserCreateDt
     private readonly UserManager<AppUser> _userManager;
     private readonly IHostEnvironment _env;
 
-    public UserAppService(IEfBaseRepository<AppUser> repository,IMapper mapper, UserManager<AppUser> userManager, IHostEnvironment env) : base(repository,mapper)
+    public UserAppService(IEfBaseRepository<AppUser> repository, IMapper mapper, UserManager<AppUser> userManager, IHostEnvironment env) : base(repository, mapper)
     {
         _userManager = userManager;
         _env = env;
@@ -53,7 +53,7 @@ public class UserAppService : AppService<AppUser, UserDto, UserDto, UserCreateDt
             UserName = input.Email,
             Name = input.Name,
             LastName = input.LastName,
-            ImageUrl = "",
+            ImageUrl = await base.SaveImage(_env,input.Image),
             Title = input.Title
         };
 
@@ -112,73 +112,23 @@ public class UserAppService : AppService<AppUser, UserDto, UserDto, UserCreateDt
         return null;
     }
 
-    public async Task<UserDto> Login(LoginDto login)
+    public async Task<List<AuthorizationDto>> GetAuthorization()
     {
-        var user = await _userManager.FindByEmailAsync(login.Email);
-
-        var result = await _userManager.CheckPasswordAsync(user, login.Password);
-
-        if (result)
+        return new List<AuthorizationDto>()
         {
-            return await GetById(user.Id);
-        }
-
-        return null;
-    }
-
-    public async Task<bool> ResetPassword(string email)
-    {
-        try
-        {
-            var user = await _userManager.FindByEmailAsync(email);
-
-            if (user != null)
-            {
-                // Yeni bir şifre oluştur
-                string newPassword = GenerateNewPassword();
-
-                // Yeni şifreyi kullanıcıya ata
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
-
-                // Şifre sıfırlama işlemi başarılı olduysa true döndür, aksi halde false döndür
-                return result.Succeeded;
-            }
-
-            return true;
-        }
-        catch (Exception e)
-        {
-            return false;
-        }
-    }
-
-    public async Task<bool> ChangePassword(ChangePasswordDto input)
-    {
-        var user = await _userManager.FindByIdAsync(input.UserId.ToString());
-
-        var result = await _userManager.ChangePasswordAsync(user, input.OldPassword, input.NewPassword);
-
-        return result.Succeeded;
-    }
-
-    public async Task<List<Authorization>> GetAuthorization()
-    {
-        return new List<Authorization>()
-        {
-            new Authorization() { Id = "profile", Name = "Profil" },
-            new Authorization() { Id = "dashboard", Name = "Ana Sayfa" },
-            new Authorization() { Id = "reservations", Name = "Rezervasyonlar" },
-            new Authorization() { Id = "users", Name = "Kullanıcılar" },
-            new Authorization() { Id = "customers", Name = "Müşteriler" },
-            new Authorization() { Id = "yachts", Name = "Yatlar" },
-            new Authorization() { Id = "yachtTypes", Name = "Yat Tipleri" },
-            new Authorization() { Id = "tourTypes", Name = "Tur Tipleri" },
-            new Authorization() { Id = "menus", Name = "Menüler" },
-            new Authorization() { Id = "locations", Name = "Lokasyonlar" },
-            new Authorization() { Id = "countries", Name = "Ülkeler" },
-            new Authorization() { Id = "cities", Name = "Şehirler" },
-            new Authorization() { Id = "financials", Name = "Mali Hesaplar" }
+            new AuthorizationDto() { Id = "profile", Name = "Profil" },
+            new AuthorizationDto() { Id = "dashboard", Name = "Ana Sayfa" },
+            new AuthorizationDto() { Id = "reservations", Name = "Rezervasyonlar" },
+            new AuthorizationDto() { Id = "users", Name = "Kullanıcılar" },
+            new AuthorizationDto() { Id = "customers", Name = "Müşteriler" },
+            new AuthorizationDto() { Id = "yachts", Name = "Yatlar" },
+            new AuthorizationDto() { Id = "yachtTypes", Name = "Yat Tipleri" },
+            new AuthorizationDto() { Id = "tourTypes", Name = "Tur Tipleri" },
+            new AuthorizationDto() { Id = "menus", Name = "Menüler" },
+            new AuthorizationDto() { Id = "locations", Name = "Lokasyonlar" },
+            new AuthorizationDto() { Id = "countries", Name = "Ülkeler" },
+            new AuthorizationDto() { Id = "cities", Name = "Şehirler" },
+            new AuthorizationDto() { Id = "financials", Name = "Mali Hesaplar" }
         };
     }
 
@@ -196,37 +146,4 @@ public class UserAppService : AppService<AppUser, UserDto, UserDto, UserCreateDt
     //
     //     return userDto;
     // }
-
-    private string GenerateNewPassword()
-    {
-        const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+";
-        StringBuilder newPassword = new StringBuilder();
-        Random random = new Random();
-
-        // En az bir büyük harf ekle
-        newPassword.Append(validChars[random.Next(validChars.Length / 2, validChars.Length / 2 + 26)]);
-        // En az bir küçük harf ekle
-        newPassword.Append(validChars[random.Next(0, validChars.Length / 2)]);
-        // En az bir rakam ekle
-        newPassword.Append(validChars[random.Next(validChars.Length / 2 + 26, validChars.Length / 2 + 36)]);
-        // En az bir özel karakter ekle
-        newPassword.Append(validChars[random.Next(validChars.Length / 2 + 36, validChars.Length)]);
-
-        // Geri kalan karakterleri rastgele ekle
-        for (int i = 4; i < 8; i++)
-        {
-            newPassword.Append(validChars[random.Next(validChars.Length)]);
-        }
-
-        // Şifreyi karıştır
-        for (int i = 0; i < newPassword.Length; i++)
-        {
-            int swapIndex = random.Next(i, newPassword.Length);
-            char temp = newPassword[i];
-            newPassword[i] = newPassword[swapIndex];
-            newPassword[swapIndex] = temp;
-        }
-
-        return newPassword.ToString();
-    }
 }

@@ -3,7 +3,6 @@ using SwordTech.Melodart.Helper.Entity;
 
 namespace SwordTech.Melodart.Application.Contract.Base;
 
-
 public interface IAppService<TEntity, TListDto, TDetailDto> where TEntity : IEntity, new()
 {
     Task<IList<TListDto>> GetAll();
@@ -18,5 +17,4 @@ public interface IAppService<TEntity, TListDto, TDetailDto, TCreateDto, TUpdateD
     Task<TDetailDto> Create(TCreateDto input);
     Task<TDetailDto> Update(Guid id, TUpdateDto input);
     Task Delete(Guid id);
-    Task<bool> ResetPassword(string email);
 }

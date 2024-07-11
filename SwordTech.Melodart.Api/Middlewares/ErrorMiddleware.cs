@@ -1,5 +1,7 @@
 using System.Net;
 using Newtonsoft.Json;
+using SwordTech.Melodart.Api.Helpers;
+using SwordTech.Melodart.Helper.Error;
 
 namespace SwordTech.Melodart.Api.Middlewares;
 
@@ -27,11 +29,16 @@ public class ErrorMiddleware
             var response = context.Response;
             response.StatusCode = (int)HttpStatusCode.InternalServerError;
             response.ContentType = "application/json";
-            var responseData = new
+
+            var responseData = new ApiResponse();
+            responseData.Message = ex.Message;
+            responseData.Errors.Add(ex.Message);
+
+            if (ex.GetType() == typeof(BusinessException))
             {
-                StatusCode = response.StatusCode,
-                Message = "An exception occured."
-            };
+                response.StatusCode = (int)HttpStatusCode.BadRequest;
+            }
+
             await response.WriteAsync(JsonConvert.SerializeObject(responseData));
         }
     }

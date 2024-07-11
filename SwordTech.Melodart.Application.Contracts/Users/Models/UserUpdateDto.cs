@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace SwordTech.Melodart.Application.Contract.Users;
+namespace SwordTech.Melodart.Application.Contract.Users.Models;
 
 public class UserUpdateDto
 {
