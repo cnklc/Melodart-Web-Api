@@ -9,4 +9,3 @@ public abstract class Entity : IEntity
     public Guid UpdatedUser { get; set; }
     public bool IsDeleted { get; set; }
 }
-

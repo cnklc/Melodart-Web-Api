@@ -19,6 +19,8 @@ public class UserAppService : AppService<AppUser, UserDto, UserDto, UserCreateDt
     {
         _userManager = userManager;
         _env = env;
+
+        mapper.ConfigurationProvider.AssertConfigurationIsValid();
     }
 
     public override async Task<IList<UserDto>> GetAll()
@@ -53,7 +55,7 @@ public class UserAppService : AppService<AppUser, UserDto, UserDto, UserCreateDt
             UserName = input.Email,
             Name = input.Name,
             LastName = input.LastName,
-            ImageUrl = await base.SaveImage(_env,input.Image),
+            ImageUrl = await base.SaveImage(_env, input.Image),
             Title = input.Title
         };
 

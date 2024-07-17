@@ -1,10 +1,14 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using SwordTech.Melodart.Application.Classes;
+using SwordTech.Melodart.Application.Contract.Classes;
+using SwordTech.Melodart.Application.Contract.Departments;
+using SwordTech.Melodart.Application.Contract.Mapper;
 using SwordTech.Melodart.Application.Contract.Users;
 using SwordTech.Melodart.Application.Contract.Users.Models;
-using SwordTech.Melodart.Application.Contract.Users.Validations;
-using SwordTech.Melodart.Application.Mapper;
+using SwordTech.Melodart.Application.Contract.Users.Validators;
+using SwordTech.Melodart.Application.Departments;
 using SwordTech.Melodart.Application.Users;
 using SwordTech.Melodart.Domain.User;
 using SwordTech.Melodart.EFCore.EFCore;
@@ -45,6 +49,8 @@ public class AppStartup
         // services
         services.AddTransient<IUserAppService, UserAppService>();
         services.AddTransient<IAuthAppService, AuthAppAppService>();
+        services.AddTransient<IDepartmentAppService, DepartmentAppService>();
+        services.AddTransient<IClassAppService, ClassAppService>();
 
         // Helper
         // services.AddTransient<IMailService, MailService>(); // smtp bilgilerini kontrol et

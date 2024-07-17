@@ -27,8 +27,6 @@ public class EfBaseRepository<TEntity> : IEfBaseRepository<TEntity> where TEntit
 
     public void Add(TEntity entity)
     {
-        entity.CreatedDate = new DateTime();
-        entity.UpdatedDate = new DateTime();
         entity.IsDeleted = false;
 
         _dbSet.Add(entity);
@@ -37,7 +35,6 @@ public class EfBaseRepository<TEntity> : IEfBaseRepository<TEntity> where TEntit
 
     public void Update(TEntity entity)
     {
-        entity.UpdatedDate = new DateTime();
         entity.IsDeleted = false;
 
         _dbSet.Update(entity);

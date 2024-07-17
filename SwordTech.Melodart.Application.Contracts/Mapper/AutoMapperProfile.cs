@@ -1,8 +1,7 @@
 using AutoMapper;
 
-namespace SwordTech.Melodart.Application.Mapper;
+namespace SwordTech.Melodart.Application.Contract.Mapper;
 
 public class AutoMapperProfile : Profile
 {
-        
 }
