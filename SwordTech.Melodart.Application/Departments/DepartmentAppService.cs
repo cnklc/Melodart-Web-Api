@@ -4,6 +4,7 @@ using SwordTech.Melodart.Application.Contract.Departments;
 using SwordTech.Melodart.Application.Contract.Departments.Models;
 using SwordTech.Melodart.Domain.Departments;
 using SwordTech.Melodart.EFCore.Repositories;
+using SwordTech.Melodart.EFCore.Repositories.Base;
 
 namespace SwordTech.Melodart.Application.Departments;
 

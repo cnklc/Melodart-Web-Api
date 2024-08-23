@@ -1,6 +1,6 @@
 using SwordTech.Melodart.Helper.Entity;
 
-namespace SwordTech.Melodart.EFCore.Repositories;
+namespace SwordTech.Melodart.EFCore.Repositories.Base;
 
 public interface IEfBaseRepository<TEntity> where TEntity : IEntity, new()
 {

@@ -2,12 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using SwordTech.Melodart.EFCore.EFCore;
 using SwordTech.Melodart.Helper.Entity;
 
-namespace SwordTech.Melodart.EFCore.Repositories;
+namespace SwordTech.Melodart.EFCore.Repositories.Base;
 
 public class EfBaseRepository<TEntity> : IEfBaseRepository<TEntity> where TEntity : class, IEntity, new()
 {
-    private readonly DbSet<TEntity> _dbSet;
-    private readonly ServiceDbContext _context;
+    protected readonly DbSet<TEntity> _dbSet;
+    protected readonly ServiceDbContext _context;
 
     public EfBaseRepository(ServiceDbContext context)
     {

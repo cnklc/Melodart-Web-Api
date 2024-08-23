@@ -7,7 +7,7 @@ namespace SwordTech.Melodart.Domain.Students;
 
 public class Student : Entity
 {
-    public Student(string name, string lastName, string phoneNumber, string email, DateTime birthday, string address, string description)
+    public Student(string name, string lastName, string phoneNumber, string? email, DateTime? birthday, string? address, string? description)
     {
         if (string.IsNullOrEmpty(name))
         {
@@ -34,13 +34,13 @@ public class Student : Entity
 
     public string Name { get; private set; }
     public string LastName { get; private set; }
-    public string PhoneNumber { get; private set; }
-    public string Email { get; private set; }
-    public string Description { get; private set; }
-    public DateTime Birthday { get; private set; }
-    public string Address { get; private set; }
+    public string? PhoneNumber { get; private set; }
+    public string? Email { get; private set; }
+    public string? Description { get; private set; }
+    public DateTime? Birthday { get; private set; }
+    public string? Address { get; private set; }
 
-    public Collection<Parent> Parents { get; private set; }
+    public Collection<Parent> Parents { get; private set; } = new Collection<Parent>();
     public Collection<Transaction> Transactions { get; private set; }
 
     public void AddParent(Parent parent)

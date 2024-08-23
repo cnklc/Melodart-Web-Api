@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using SwordTech.Melodart.Domain.Students;
 using SwordTech.Melodart.Domain.Teachers;
 using SwordTech.Melodart.Helper.Entity;
@@ -22,10 +23,10 @@ public class Account : Entity
     {
     }
 
-    public string Name { get; set; }
-    public string Description { get; set; }
+    public string Name { get; private set; }
+    public string Description { get; private set; }
 
-    public List<Transaction> Transactions { get; set; }
+    public virtual Collection<Transaction> Transactions { get; private set; } = new Collection<Transaction>();
 
     public void AddTransaction(Transaction transaction)
     {

@@ -6,14 +6,15 @@ using SwordTech.Melodart.Application.Contract.Base;
 using SwordTech.Melodart.EFCore.Repositories;
 using SwordTech.Melodart.Helper.Entity;
 using Microsoft.Extensions.Hosting;
+using SwordTech.Melodart.EFCore.Repositories.Base;
 
 namespace SwordTech.Melodart.Application.Base;
 
-public class AppService<TEntity, TListDto, TDetailDto, TCreateDto, TUpdateDto> : IAppService<TEntity, TListDto, TDetailDto, TCreateDto, TUpdateDto>
+public class AppService<TEntity, TListDto, TDetailDto> : IAppService<TEntity, TListDto, TDetailDto>
     where TEntity : IEntity, new()
 {
-    private readonly IEfBaseRepository<TEntity> _repository;
-    private readonly IMapper _mapper;
+    protected readonly IEfBaseRepository<TEntity> _repository;
+    protected readonly IMapper _mapper;
 
     public AppService(IEfBaseRepository<TEntity> repository, IMapper mapper)
     {
@@ -34,6 +35,31 @@ public class AppService<TEntity, TListDto, TDetailDto, TCreateDto, TUpdateDto> :
     public virtual async Task<TDetailDto> GetById(Guid id)
     {
         return await _mapper.ProjectTo<TDetailDto>(_repository.GetAll().Where(x => x.Id == id)).FirstOrDefaultAsync();
+    }
+
+    public async Task<string> SaveImage(IHostEnvironment env, IFormFile file)
+    {
+        var pathToSave = Path.Combine(env.ContentRootPath, "wwwroot/images");
+
+        var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+        var fullPath = Path.Combine(pathToSave, fileName);
+
+        using (var stream = System.IO.File.Create(fullPath))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        return fileName;
+    }
+}
+
+
+public class AppService<TEntity, TListDto, TDetailDto, TCreateDto, TUpdateDto> : AppService<TEntity, TListDto, TDetailDto>,
+    IAppService<TEntity, TListDto, TDetailDto, TCreateDto, TUpdateDto>
+    where TEntity : IEntity, new()
+{
+    public AppService(IEfBaseRepository<TEntity> repository, IMapper mapper) : base(repository, mapper)
+    {
     }
 
     public virtual async Task<TDetailDto> Create(TCreateDto input)
@@ -61,20 +87,5 @@ public class AppService<TEntity, TListDto, TDetailDto, TCreateDto, TUpdateDto> :
         {
             _repository.Delete(entity);
         }
-    }
-
-    public async Task<string> SaveImage(IHostEnvironment env, IFormFile file)
-    {
-        var pathToSave = Path.Combine(env.ContentRootPath, "wwwroot/images");
-
-        var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
-        var fullPath = Path.Combine(pathToSave, fileName);
-
-        using (var stream = System.IO.File.Create(fullPath))
-        {
-            await file.CopyToAsync(stream);
-        }
-
-        return fileName;
     }
 }

@@ -31,30 +31,47 @@ void ConfigureServices(IServiceCollection services)
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
     services.AddHealthChecks();
+    
+    services.AddCors(options =>
+    {
+        options.AddPolicy("CorsPolicy", builder =>
+        {
+            builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+    });
 }
 
 WebApplication Configure(WebApplication app)
 {
-// Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
-
     app.MapHealthChecks("/healthz");
 
-    // custom middlewares
+    app.UseStaticFiles();
+
     app.UseLogginMiddleware();
     app.UseErrorMiddleware();
-    // custom middlewares
+
+    // app.UseMiddleware<ValidationMiddleware<User>>();
+
+    // Configure the HTTP request pipeline.
+    // if (app.Environment.IsDevelopment())
+    // {
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    // }
+
+    app.UseCors("CorsPolicy");
 
     app.UseHttpsRedirection();
 
+    app.UseRouting();
+
+    app.UseAuthentication();
     app.UseAuthorization();
 
-    app.MapControllers();
-
+    app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+    
     return app;
 }
 

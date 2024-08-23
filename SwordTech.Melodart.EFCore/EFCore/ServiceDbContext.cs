@@ -4,6 +4,7 @@ using SwordTech.Melodart.Domain.Classes;
 using SwordTech.Melodart.Domain.Departments;
 using SwordTech.Melodart.Domain.Finance;
 using SwordTech.Melodart.Domain.Students;
+using SwordTech.Melodart.Domain.Teachers;
 using SwordTech.Melodart.Domain.User;
 using SwordTech.Melodart.Helper.Entity;
 
@@ -48,12 +49,62 @@ public class ServiceDbContext : IdentityDbContext<AppUser, AppRole, Guid>
     // docker run --name sqlserver_container -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=1q2w3E1q2w3E' -e 'MSSQL_PID=Developer' -p 1433:1433 -h sqlServer2022 -d mcr.microsoft.com/mssql/server:2022-latest
 
     // dotnet ef migrations add InitialCreate
-    
+
     // dotnet ef database update  
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(@"server=localhost,1433;Database=melodart;uid=sa;pwd=1q2w3E1q2w3E;TrustServerCertificate=True;");
+        optionsBuilder.UseSqlServer(@"server=swordtech.net,1433;Database=semboldi_melo;uid=semboldi_melo;pwd=d4Dq8Je6E;TrustServerCertificate=True;");
+        // optionsBuilder.UseSqlServer(@"server=localhost,1433;Database=melodart;uid=sa;pwd=1q2w3E1q2w3E;TrustServerCertificate=True;");
+        // optionsBuilder
+        //     .UseLazyLoadingProxies();
         base.OnConfiguring(optionsBuilder);
+    }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.Entity<Account>(b =>
+        {
+            b.HasMany(x => x.Transactions)
+                .WithOne()
+                .HasForeignKey(x => x.AccountId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        builder.Entity<Student>(b =>
+        {
+            b.HasMany(x => x.Transactions)
+                .WithOne()
+                .HasForeignKey(x => x.StudentId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        builder.Entity<Teacher>(b =>
+        {
+            b.HasMany(x => x.Transactions)
+                .WithOne()
+                .HasForeignKey(x => x.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        builder.Entity<Transaction>(b =>
+        {
+            b.HasOne(x => x.Account)
+                .WithMany(x => x.Transactions)
+                .HasForeignKey(x => x.AccountId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasOne(x => x.Student)
+                .WithMany(x => x.Transactions)
+                .HasForeignKey(x => x.StudentId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasOne(x => x.Teacher)
+                .WithMany(x => x.Transactions)
+                .HasForeignKey(x => x.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
     }
 }

@@ -8,6 +8,7 @@ public class UserMapperProfile : Profile
 {
     public UserMapperProfile()
     {
-        CreateMap<AppUser, UserDto>();
+        CreateMap<AppUser, UserDto>()
+            .ForMember(dest => dest.Authorizations, opt => opt.Ignore());;
     }
 }

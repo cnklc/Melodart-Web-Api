@@ -7,6 +7,7 @@ using SwordTech.Melodart.Application.Contract.Users;
 using SwordTech.Melodart.Application.Contract.Users.Models;
 using SwordTech.Melodart.Domain.User;
 using SwordTech.Melodart.EFCore.Repositories;
+using SwordTech.Melodart.EFCore.Repositories.Base;
 
 namespace SwordTech.Melodart.Application.Users;
 
@@ -55,10 +56,14 @@ public class UserAppService : AppService<AppUser, UserDto, UserDto, UserCreateDt
             UserName = input.Email,
             Name = input.Name,
             LastName = input.LastName,
-            ImageUrl = await base.SaveImage(_env, input.Image),
             Title = input.Title
         };
-
+        
+        if (input.Image != null)
+        {
+            user.ImageUrl = await base.SaveImage(_env, input.Image);
+        }
+        
         var result = await _userManager.CreateAsync(user, input.Password);
 
         if (result.Succeeded)

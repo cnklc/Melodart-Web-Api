@@ -1,6 +1,8 @@
+using SwordTech.Melodart.Application.Contract.Base;
+
 namespace SwordTech.Melodart.Application.Contract.Teachers.Models;
 
-public class TeacherDto
+public class TeacherDto : BaseDto
 {
     public string Name { get; private set; }
     public string LastName { get; private set; }

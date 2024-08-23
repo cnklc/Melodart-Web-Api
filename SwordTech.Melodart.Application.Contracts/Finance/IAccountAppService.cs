@@ -4,6 +4,7 @@ using SwordTech.Melodart.Domain.Finance;
 
 namespace SwordTech.Melodart.Application.Contract.Finance;
 
-public interface IAccountAppservice : IAppService<Account, AccountDto, AccountDto, AccountCreateDto, AccountUpdateDto>
+public interface IAccountAppService : IAppService<Account, AccountDto, AccountDto, AccountCreateDto, AccountUpdateDto>
 {
+    Task<TransactionDto> AddTransaction(TransactionCreateDto input);
 }
