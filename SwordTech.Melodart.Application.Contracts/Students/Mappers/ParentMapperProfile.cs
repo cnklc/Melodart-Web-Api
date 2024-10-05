@@ -8,8 +8,8 @@ public class ParentMapperProfile : Profile
 {
     public ParentMapperProfile()
     {
-        // CreateMap<Parent, ParentDto>();
-        // CreateMap<ParentCreateDto, Parent>();
-        // CreateMap<ParentUpdateDto, Parent>();
+        CreateMap<Parent, ParentDto>();
+        CreateMap<ParentCreateDto, Parent>();
+        CreateMap<ParentUpdateDto, Parent>();
     }
 }

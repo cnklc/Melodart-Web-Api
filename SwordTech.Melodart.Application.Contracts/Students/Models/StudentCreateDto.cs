@@ -9,7 +9,7 @@ public class StudentCreateDto
     public string? Description { get; set; }
     public DateTime? Birthday { get; set; }
     public string? Address { get; set; }
-
-    public List<ParentCreateDto> Parents { get; set; } 
-     
+    
+    public List<Guid> Departments { get; set; }
+    public List<Guid> Teachers { get; set; }
 }

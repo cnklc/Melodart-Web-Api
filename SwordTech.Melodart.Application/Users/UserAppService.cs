@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
 using SwordTech.Melodart.Application.Base;
@@ -8,20 +9,23 @@ using SwordTech.Melodart.Application.Contract.Users.Models;
 using SwordTech.Melodart.Domain.User;
 using SwordTech.Melodart.EFCore.Repositories;
 using SwordTech.Melodart.EFCore.Repositories.Base;
+using System.Text.RegularExpressions;
 
 namespace SwordTech.Melodart.Application.Users;
 
 public class UserAppService : AppService<AppUser, UserDto, UserDto, UserCreateDto, UserUpdateDto>, IUserAppService
 {
     private readonly UserManager<AppUser> _userManager;
-    private readonly IHostEnvironment _env;
+    private readonly IWebHostEnvironment _env;
 
-    public UserAppService(IEfBaseRepository<AppUser> repository, IMapper mapper, UserManager<AppUser> userManager, IHostEnvironment env) : base(repository, mapper)
+
+    public UserAppService(IEfBaseRepository<AppUser> repository, IMapper mapper, UserManager<AppUser> userManager, IWebHostEnvironment env) : base(repository, mapper)
     {
         _userManager = userManager;
         _env = env;
 
-        mapper.ConfigurationProvider.AssertConfigurationIsValid();
+
+        // mapper.ConfigurationProvider.AssertConfigurationIsValid();
     }
 
     public override async Task<IList<UserDto>> GetAll()
@@ -34,6 +38,11 @@ public class UserAppService : AppService<AppUser, UserDto, UserDto, UserCreateDt
             var lists = await _userManager.GetClaimsAsync(user);
 
             userDto.Authorizations = lists.Select(x => x.Value).ToList();
+
+            if (userDto.Authorizations[0].Contains(","))
+            {
+                userDto.Authorizations = Regex.Split(userDto.Authorizations[0], ",").ToList();
+            }
         }
 
         return list;
@@ -44,6 +53,11 @@ public class UserAppService : AppService<AppUser, UserDto, UserDto, UserCreateDt
         var user = await base.GetById(id);
 
         user.Authorizations = (await _userManager.GetClaimsAsync(await _userManager.FindByIdAsync(id.ToString()))).Select(x => x.Value).ToList();
+
+        if (user.Authorizations[0].Contains(","))
+        {
+            user.Authorizations = Regex.Split(user.Authorizations[0], ",").ToList();
+        }
 
         return user;
     }
@@ -58,12 +72,12 @@ public class UserAppService : AppService<AppUser, UserDto, UserDto, UserCreateDt
             LastName = input.LastName,
             Title = input.Title
         };
-        
+
         if (input.Image != null)
         {
             user.ImageUrl = await base.SaveImage(_env, input.Image);
         }
-        
+
         var result = await _userManager.CreateAsync(user, input.Password);
 
         if (result.Succeeded)
@@ -125,32 +139,17 @@ public class UserAppService : AppService<AppUser, UserDto, UserDto, UserCreateDt
         {
             new AuthorizationDto() { Id = "profile", Name = "Profil" },
             new AuthorizationDto() { Id = "dashboard", Name = "Ana Sayfa" },
-            new AuthorizationDto() { Id = "reservations", Name = "Rezervasyonlar" },
-            new AuthorizationDto() { Id = "users", Name = "Kullanıcılar" },
-            new AuthorizationDto() { Id = "customers", Name = "Müşteriler" },
-            new AuthorizationDto() { Id = "yachts", Name = "Yatlar" },
-            new AuthorizationDto() { Id = "yachtTypes", Name = "Yat Tipleri" },
-            new AuthorizationDto() { Id = "tourTypes", Name = "Tur Tipleri" },
-            new AuthorizationDto() { Id = "menus", Name = "Menüler" },
-            new AuthorizationDto() { Id = "locations", Name = "Lokasyonlar" },
-            new AuthorizationDto() { Id = "countries", Name = "Ülkeler" },
-            new AuthorizationDto() { Id = "cities", Name = "Şehirler" },
-            new AuthorizationDto() { Id = "financials", Name = "Mali Hesaplar" }
+            new AuthorizationDto() { Id = "users", Name = "Kullanıcı Yönetimi" },
+            new AuthorizationDto() { Id = "students", Name = "Öğrenci Yönetimi" },
+            new AuthorizationDto() { Id = "teahcers", Name = "Öğretmen Yönetimi" },
+            new AuthorizationDto() { Id = "lessens", Name = "Ders Programı Yönetimi" },
+            new AuthorizationDto() { Id = "d", Name = "Ders Programı Yönetimi" },
+            new AuthorizationDto() { Id = "dd", Name = "Devamsızlık Takibi" },
+            new AuthorizationDto() { Id = "financial", Name = "Finans" },
+            new AuthorizationDto() { Id = "definations", Name = "Tanımlar" },
+            new AuthorizationDto() { Id = "settings", Name = "Ayarlar" },
         };
     }
 
-    // public async Task<UserDto> GetMyProfile()
-    // {
-    //     var user = await _userManager.FindByIdAsync(  User.Identity.GetUserId());
-    //     var userDto = new UserDto()
-    //     {
-    //         Id = user.Id,
-    //         Name = user.Name,
-    //         LastName = user.LastName,
-    //         Email = user.Email,
-    //         Authorizations = (await _userManager.GetClaimsAsync(user)).Select(x => x.Value).ToList()
-    //     };
-    //
-    //     return userDto;
-    // }
+
 }

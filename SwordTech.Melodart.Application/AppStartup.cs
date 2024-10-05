@@ -1,3 +1,4 @@
+using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,18 +8,20 @@ using SwordTech.Melodart.Application.Contract.Classes;
 using SwordTech.Melodart.Application.Contract.Departments;
 using SwordTech.Melodart.Application.Contract.Finance;
 using SwordTech.Melodart.Application.Contract.Students;
+using SwordTech.Melodart.Application.Contract.Teachers;
 using SwordTech.Melodart.Application.Contract.Users;
 using SwordTech.Melodart.Application.Contract.Users.Models;
 using SwordTech.Melodart.Application.Contract.Users.Validators;
 using SwordTech.Melodart.Application.Departments;
 using SwordTech.Melodart.Application.Finances;
 using SwordTech.Melodart.Application.Students;
+using SwordTech.Melodart.Application.Teachers;
 using SwordTech.Melodart.Application.Users;
 using SwordTech.Melodart.Domain.User;
-using SwordTech.Melodart.EFCore.EFCore;
-using SwordTech.Melodart.EFCore.Repositories;
+using SwordTech.Melodart.EFCore.EFCore; 
 using SwordTech.Melodart.EFCore.Repositories.Accounts;
 using SwordTech.Melodart.EFCore.Repositories.Base;
+using System.Reflection;
 
 namespace SwordTech.Melodart.Application;
 
@@ -32,9 +35,8 @@ public class AppStartup
             .AddDefaultTokenProviders();
 
         services.AddMemoryCache();
-
-        services.AddAutoMapper(typeof(AutoMapperProfile));
-
+        services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+        
         AddDI(services);
 
         Configure();
@@ -62,6 +64,7 @@ public class AppStartup
         services.AddTransient<IAccountAppService, AccountAppService>();
         services.AddTransient<IStudentAppService, StudentAppService>();
         services.AddTransient<IParentAppService, ParentAppService>();
+        services.AddTransient<ITeacherAppService, TeacherAppService>();
 
         // Helper
         // services.AddTransient<IMailService, MailService>(); // smtp bilgilerini kontrol et

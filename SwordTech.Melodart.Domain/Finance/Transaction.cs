@@ -50,4 +50,16 @@ public class Transaction : Entity
     {
         AccountId = id;
     }
+
+    public void AddStudent(Student student)
+    {
+        Student = student;
+        StudentId = student.Id;
+    }
+    
+    public void AddTeacher(Teacher teacher)
+    {
+        Teacher = teacher;
+        TeacherId = teacher.Id;
+    }
 }

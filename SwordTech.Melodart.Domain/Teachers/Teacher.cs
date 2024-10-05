@@ -1,3 +1,4 @@
+using SwordTech.Melodart.Domain._ManyToMany;
 using System.Collections.ObjectModel;
 using SwordTech.Melodart.Domain.Finance;
 using SwordTech.Melodart.Domain.Students;
@@ -26,6 +27,18 @@ public class Teacher : Entity
     public string Email { get; private set; }
     public string Description { get; private set; }
 
-    public Collection<Transaction> Transactions { get; private set; }
-    public Collection<Student> Students { get; private set; }
+
+    public Collection<TeacherDepartment> TeacherDepartments { get; private set; } = new Collection<TeacherDepartment>();
+    public Collection<Transaction> Transactions { get; private set; } = new Collection<Transaction>();
+    
+    
+    public void AddTransactiont(Transaction transaction)
+    {
+        Transactions.Add(transaction);
+    }
+
+    public void AddTeacherDepartments(TeacherDepartment teacherDepartment)
+    {
+        TeacherDepartments.Add(teacherDepartment);
+    }
 }

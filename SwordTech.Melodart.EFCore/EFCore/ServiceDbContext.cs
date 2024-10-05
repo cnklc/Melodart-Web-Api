@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SwordTech.Melodart.Domain._ManyToMany;
 using SwordTech.Melodart.Domain.Classes;
 using SwordTech.Melodart.Domain.Departments;
 using SwordTech.Melodart.Domain.Finance;
@@ -21,6 +22,10 @@ public class ServiceDbContext : IdentityDbContext<AppUser, AppRole, Guid>
     public DbSet<Department> Departments { get; set; }
     public DbSet<Class> Classes { get; set; }
 
+    public DbSet<TeacherDepartment> TeacherDepartments { get; set; }
+    public DbSet<StudentDepartment> StudentDepartments { get; set; }
+    public DbSet<TeacherStudent> TeacherStudents { get; set; }
+
     public override int SaveChanges()
     {
         foreach (var entry in ChangeTracker.Entries<IEntity>())
@@ -32,9 +37,11 @@ public class ServiceDbContext : IdentityDbContext<AppUser, AppRole, Guid>
                     entry.Entity.UpdatedDate = DateTime.UtcNow;
                     entry.Entity.IsDeleted = false;
                     break;
+
                 case EntityState.Modified:
                     entry.Entity.UpdatedDate = DateTime.UtcNow;
                     break;
+
                 case EntityState.Deleted:
                     entry.State = EntityState.Modified;
                     entry.Entity.UpdatedDate = DateTime.UtcNow;
@@ -79,6 +86,11 @@ public class ServiceDbContext : IdentityDbContext<AppUser, AppRole, Guid>
                 .WithOne()
                 .HasForeignKey(x => x.StudentId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasMany(x => x.StudentDepartment)
+                .WithOne()
+                .HasForeignKey(x => x.StudentId)
+                .OnDelete(DeleteBehavior.NoAction);
         });
 
         builder.Entity<Teacher>(b =>
@@ -86,6 +98,19 @@ public class ServiceDbContext : IdentityDbContext<AppUser, AppRole, Guid>
             b.HasMany(x => x.Transactions)
                 .WithOne()
                 .HasForeignKey(x => x.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasMany(x => x.TeacherDepartments)
+                .WithOne()
+                .HasForeignKey(x => x.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        builder.Entity<Department>(b =>
+        {
+            b.HasMany(x => x.TeacherDepartments)
+                .WithOne()
+                .HasForeignKey(x => x.DepartmentId)
                 .OnDelete(DeleteBehavior.NoAction);
         });
 

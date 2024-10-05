@@ -1,3 +1,4 @@
+using SwordTech.Melodart.Domain._ManyToMany;
 using System.Collections.ObjectModel;
 using SwordTech.Melodart.Domain.Finance;
 using SwordTech.Melodart.Helper.Entity;
@@ -41,10 +42,25 @@ public class Student : Entity
     public string? Address { get; private set; }
 
     public Collection<Parent> Parents { get; private set; } = new Collection<Parent>();
-    public Collection<Transaction> Transactions { get; private set; }
+    public Collection<Transaction> Transactions { get; private set; }  = new Collection<Transaction>();
+
+    public Collection<StudentDepartment> StudentDepartment { get; private set; } = new Collection<StudentDepartment>();
+    public Collection<TeacherStudent> TeacherStudents { get; private set; } = new Collection<TeacherStudent>();
 
     public void AddParent(Parent parent)
     {
         Parents.Add(parent);
     }
+
+    public void AddStudentDepartment(StudentDepartment studentDepartment)
+    {
+        StudentDepartment.Add(studentDepartment);
+    }
+
+    public void AddTeacherStudents(TeacherStudent teacherStudent)
+    {
+        TeacherStudents.Add(teacherStudent);
+    }
+    
+    
 }

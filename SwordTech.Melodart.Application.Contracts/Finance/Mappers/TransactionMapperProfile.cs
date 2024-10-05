@@ -8,8 +8,8 @@ public class TransactionMapperProfile : Profile
 {
     public TransactionMapperProfile()
     {
-        // CreateMap<Transaction, TransactionDto>();
-        // CreateMap<TransactionCreateDto, Transaction>();
-        // CreateMap<TransactionUpdateDto, Transaction>();
+        CreateMap<Transaction, TransactionDto>();
+        CreateMap<TransactionCreateDto, Transaction>();
+        CreateMap<TransactionUpdateDto, Transaction>();
     }
 }

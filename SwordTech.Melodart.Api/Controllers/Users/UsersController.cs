@@ -42,7 +42,7 @@ public class UsersController : BaseApiController
     [ProducesResponseType(typeof(ApiResponse<UserDto>), 200)]
     [ProducesResponseType(typeof(ApiResponse), 400)]
     [ProducesResponseType(typeof(ApiResponse), 500)]
-    public async Task<IActionResult> Post([FromBody] UserCreateDto model)
+    public async Task<IActionResult> Post([FromForm] UserCreateDto model)
     {
         var data = await _userAppService.Create(model);
 

@@ -22,7 +22,7 @@ public class EfBaseRepository<TEntity> : IEfBaseRepository<TEntity> where TEntit
 
     public TEntity GetById(Guid id)
     {
-        return GetAll().AsNoTracking().First(x => x.IsDeleted == false && x.Id == id);
+        return GetAll().First(x => x.IsDeleted == false && x.Id == id);
     }
 
     public void Add(TEntity entity)

@@ -28,7 +28,7 @@ public class AccountController : BaseApiController
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(ApiResponse<AccountDto>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<AccountDetailDto>), 200)]
     [ProducesResponseType(typeof(ApiResponse), 400)]
     [ProducesResponseType(typeof(ApiResponse), 500)]
     public async Task<IActionResult> Get(Guid id)

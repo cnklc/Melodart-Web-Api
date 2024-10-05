@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SwordTech.Melodart.Application.Contract.Base;
@@ -37,11 +38,13 @@ public class AppService<TEntity, TListDto, TDetailDto> : IAppService<TEntity, TL
         return await _mapper.ProjectTo<TDetailDto>(_repository.GetAll().Where(x => x.Id == id)).FirstOrDefaultAsync();
     }
 
-    public async Task<string> SaveImage(IHostEnvironment env, IFormFile file)
+    public async Task<string> SaveImage(IWebHostEnvironment env, IFormFile file)
     {
-        var pathToSave = Path.Combine(env.ContentRootPath, "wwwroot/images");
+        // var pathToSave = Path.Combine(env.ContentRootPath, "wwwroot/images");
+        var pathToSave = Path.Combine(env.WebRootPath, "images");
 
-        var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+        var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName); 
+
         var fullPath = Path.Combine(pathToSave, fileName);
 
         using (var stream = System.IO.File.Create(fullPath))
@@ -73,7 +76,7 @@ public class AppService<TEntity, TListDto, TDetailDto, TCreateDto, TUpdateDto> :
     public virtual async Task<TDetailDto> Update(Guid id, TUpdateDto input)
     {
         var entity = _repository.GetById(id);
-        _mapper.Map(input, entity);
+        _mapper.Map(input,entity);
         _repository.Update(entity);
 
         return await GetById(entity.Id);

@@ -14,18 +14,27 @@ public class TransactionAppService : AppService<Transaction, TransactionDto, Tra
     public TransactionAppService(IEfBaseRepository<Transaction> repository, IMapper mapper) : base(repository, mapper)
     {
     }
-
+    
     public async Task<TransactionDto> Update(Guid id, TransactionUpdateDto input)
     {
         var entity = _repository.GetById(id);
-
-        entity.SetDescription(input.Description);
-        entity.SetAmount(input.Amount);
-
+        _mapper.Map(input,entity);
         _repository.Update(entity);
 
-        return await _mapper.ProjectTo<TransactionDto>(_repository.GetAll().Where(x => x.Id == id)).FirstOrDefaultAsync();
+        return await GetById(entity.Id);
     }
+
+    // public async Task<TransactionDto> Update(Guid id, TransactionUpdateDto input)
+    // {
+    //     var entity = _repository.GetById(id);
+    //
+    //     entity.SetDescription(input.Description);
+    //     entity.SetAmount(input.Amount);
+    //
+    //     _repository.Update(entity);
+    //
+    //     return await GetById(entity.Id);
+    // }
 
     public async Task Delete(Guid id)
     {
@@ -36,4 +45,5 @@ public class TransactionAppService : AppService<Transaction, TransactionDto, Tra
             _repository.Delete(entity);
         }
     }
+   
 }
