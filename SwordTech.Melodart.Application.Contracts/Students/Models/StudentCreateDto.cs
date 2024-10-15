@@ -1,3 +1,5 @@
+using SwordTech.Melodart.Application.Contract.Lessons.Models;
+
 namespace SwordTech.Melodart.Application.Contract.Students.Models;
 
 public class StudentCreateDto
@@ -9,7 +11,8 @@ public class StudentCreateDto
     public string? Description { get; set; }
     public DateTime? Birthday { get; set; }
     public string? Address { get; set; }
-    
-    public List<Guid> Departments { get; set; }
-    public List<Guid> Teachers { get; set; }
+
+    public List<LessonCreateDto> Lessons { get; set; }
 }
+
+  

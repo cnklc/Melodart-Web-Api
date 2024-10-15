@@ -4,6 +4,7 @@ using SwordTech.Melodart.Domain._ManyToMany;
 using SwordTech.Melodart.Domain.Classes;
 using SwordTech.Melodart.Domain.Departments;
 using SwordTech.Melodart.Domain.Finance;
+using SwordTech.Melodart.Domain.Lessons;
 using SwordTech.Melodart.Domain.Students;
 using SwordTech.Melodart.Domain.Teachers;
 using SwordTech.Melodart.Domain.User;
@@ -21,6 +22,8 @@ public class ServiceDbContext : IdentityDbContext<AppUser, AppRole, Guid>
 
     public DbSet<Department> Departments { get; set; }
     public DbSet<Class> Classes { get; set; }
+    public DbSet<Lesson> Lessons { get; set; }
+    public DbSet<Schedule> Schedules { get; set; }
 
     public DbSet<TeacherDepartment> TeacherDepartments { get; set; }
     public DbSet<StudentDepartment> StudentDepartments { get; set; }
@@ -91,6 +94,11 @@ public class ServiceDbContext : IdentityDbContext<AppUser, AppRole, Guid>
                 .WithOne()
                 .HasForeignKey(x => x.StudentId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasMany(x => x.Schedules)
+                .WithOne(x => x.Student)
+                .HasForeignKey(x => x.StudentId)
+                .OnDelete(DeleteBehavior.NoAction);
         });
 
         builder.Entity<Teacher>(b =>
@@ -104,12 +112,27 @@ public class ServiceDbContext : IdentityDbContext<AppUser, AppRole, Guid>
                 .WithOne()
                 .HasForeignKey(x => x.TeacherId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasMany(x => x.Schedules)
+                .WithOne(x => x.Teacher)
+                .HasForeignKey(x => x.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
         });
 
         builder.Entity<Department>(b =>
         {
             b.HasMany(x => x.TeacherDepartments)
                 .WithOne()
+                .HasForeignKey(x => x.DepartmentId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasMany(x => x.Lessons)
+                .WithOne(x => x.Department)
+                .HasForeignKey(x => x.DepartmentId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasMany(x => x.Schedules)
+                .WithOne(x => x.Department)
                 .HasForeignKey(x => x.DepartmentId)
                 .OnDelete(DeleteBehavior.NoAction);
         });
@@ -129,6 +152,47 @@ public class ServiceDbContext : IdentityDbContext<AppUser, AppRole, Guid>
             b.HasOne(x => x.Teacher)
                 .WithMany(x => x.Transactions)
                 .HasForeignKey(x => x.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        builder.Entity<Lesson>(b =>
+        {
+            b.HasOne(x => x.Department)
+                .WithMany(x => x.Lessons)
+                .HasForeignKey(x => x.DepartmentId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasOne(x => x.Teacher)
+                .WithMany(x => x.Lessons)
+                .HasForeignKey(x => x.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasOne(x => x.Student)
+                .WithMany(x => x.Lessons)
+                .HasForeignKey(x => x.StudentId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasMany(x => x.Schedules)
+                .WithOne(x => x.Lesson)
+                .HasForeignKey(x => x.LessonId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        builder.Entity<Schedule>(b =>
+        {
+            b.HasOne(x => x.Department)
+                .WithMany(x => x.Schedules)
+                .HasForeignKey(x => x.DepartmentId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasOne(x => x.Teacher)
+                .WithMany(x => x.Schedules)
+                .HasForeignKey(x => x.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasOne(x => x.Student)
+                .WithMany(x => x.Schedules)
+                .HasForeignKey(x => x.StudentId)
                 .OnDelete(DeleteBehavior.NoAction);
         });
     }

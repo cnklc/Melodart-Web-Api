@@ -1,6 +1,7 @@
 using SwordTech.Melodart.Domain._ManyToMany;
 using System.Collections.ObjectModel;
 using SwordTech.Melodart.Domain.Finance;
+using SwordTech.Melodart.Domain.Lessons;
 using SwordTech.Melodart.Helper.Entity;
 using SwordTech.Melodart.Helper.Error;
 
@@ -42,11 +43,14 @@ public class Student : Entity
     public string? Address { get; private set; }
 
     public Collection<Parent> Parents { get; private set; } = new Collection<Parent>();
-    public Collection<Transaction> Transactions { get; private set; }  = new Collection<Transaction>();
+    public Collection<Transaction> Transactions { get; private set; } = new Collection<Transaction>();
 
     public Collection<StudentDepartment> StudentDepartment { get; private set; } = new Collection<StudentDepartment>();
     public Collection<TeacherStudent> TeacherStudents { get; private set; } = new Collection<TeacherStudent>();
 
+    public Collection<Lesson> Lessons { get; set; } = new Collection<Lesson>();
+    public Collection<Schedule> Schedules { get; set; } = new Collection<Schedule>();
+    
     public void AddParent(Parent parent)
     {
         Parents.Add(parent);
@@ -61,6 +65,4 @@ public class Student : Entity
     {
         TeacherStudents.Add(teacherStudent);
     }
-    
-    
 }

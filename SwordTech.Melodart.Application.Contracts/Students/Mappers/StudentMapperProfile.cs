@@ -9,8 +9,9 @@ public class StudentMapperProfile : Profile
     public StudentMapperProfile()
     {
         CreateMap<Student, StudentDto>()
-            .ForMember(dest => dest.Teachers, opt => opt.MapFrom(src => src.TeacherStudents.Select(x=>x.Teacher)))
-            .ForMember(dest => dest.Departments, opt => opt.MapFrom(src => src.StudentDepartment.Select(x=>x.Department)));
+            .ForMember(dest => dest.Teachers, opt => opt.MapFrom(src => src.TeacherStudents.Select(x => x.Teacher)))
+            .ForMember(dest => dest.Departments, opt => opt.MapFrom(src => src.StudentDepartment.Select(x => x.Department)))
+            .ForMember(dest => dest.Lessons, opt => opt.MapFrom(src => src.Lessons));
         CreateMap<StudentCreateDto, Student>();
         CreateMap<StudentUpdateDto, Student>();
     }
