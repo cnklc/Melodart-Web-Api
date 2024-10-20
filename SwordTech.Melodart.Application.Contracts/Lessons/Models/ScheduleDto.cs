@@ -7,6 +7,7 @@ namespace SwordTech.Melodart.Application.Contract.Lessons.Models
         public Guid Id { get; set; }
         public DateTime ScheduleTime { get; set; }
         public ScheduleStatusType ScheduleStatusType { get; set; }
+        public string Description { get; set; }
         
         public int DayOfTheWeek { get; set; }
         public TimeSpan TimeOfDay { get; set; }

@@ -10,6 +10,7 @@ namespace SwordTech.Melodart.Domain.Lessons
     {
         public DateTime ScheduleTime { get; set; }
         public ScheduleStatusType ScheduleStatusType { get; set; }
+        public string Description { get; set; }
         
      
         public int DayOfTheWeek { get; set; }
