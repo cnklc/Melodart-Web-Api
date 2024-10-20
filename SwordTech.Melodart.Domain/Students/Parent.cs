@@ -1,3 +1,4 @@
+using SwordTech.Melodart.Domain.Contracts.Student;
 using SwordTech.Melodart.Helper.Entity;
 using SwordTech.Melodart.Helper.Error;
 
@@ -5,7 +6,7 @@ namespace SwordTech.Melodart.Domain.Students;
 
 public class Parent : Entity
 {
-    public Parent(string name, string lastName, string phoneNumber, string? email, string? description)
+    public Parent(ParentType parentType,string name, string lastName, string phoneNumber, string? email, string? description)
     {
         if (string.IsNullOrEmpty(name))
         {
@@ -22,6 +23,7 @@ public class Parent : Entity
             throw new DomainException("Soyisim alanı boş olamaz.");
         }
 
+        ParentType = parentType;
         Name = name;
         LastName = lastName;
         PhoneNumber = phoneNumber;
@@ -38,6 +40,7 @@ public class Parent : Entity
     public string PhoneNumber { get; private set; }
     public string? Email { get; private set; }
     public string? Description { get; private set; }
+    public ParentType ParentType { get; set; }
 
     public Guid StudentId { get; private set; }
     public Student Student { get; private set; }

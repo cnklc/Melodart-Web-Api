@@ -1,6 +1,8 @@
 using SwordTech.Melodart.Domain._ManyToMany;
+using SwordTech.Melodart.Domain.Contracts.Student;
 using System.Collections.ObjectModel;
 using SwordTech.Melodart.Domain.Finance;
+using SwordTech.Melodart.Domain.Lessons;
 using SwordTech.Melodart.Helper.Entity;
 using SwordTech.Melodart.Helper.Error;
 
@@ -8,7 +10,7 @@ namespace SwordTech.Melodart.Domain.Students;
 
 public class Student : Entity
 {
-    public Student(string name, string lastName, string phoneNumber, string? email, DateTime? birthday, string? address, string? description)
+    public Student(string name, string lastName, string phoneNumber, DateTime? birthday, string? address, string? description, GenderType? gender)
     {
         if (string.IsNullOrEmpty(name))
         {
@@ -23,10 +25,11 @@ public class Student : Entity
         Name = name;
         LastName = lastName;
         PhoneNumber = phoneNumber;
-        Email = email;
+
         Birthday = birthday;
         Address = address;
         Description = description;
+        Gender = gender;
     }
 
     public Student()
@@ -36,16 +39,19 @@ public class Student : Entity
     public string Name { get; private set; }
     public string LastName { get; private set; }
     public string? PhoneNumber { get; private set; }
-    public string? Email { get; private set; }
     public string? Description { get; private set; }
     public DateTime? Birthday { get; private set; }
     public string? Address { get; private set; }
+    public GenderType? Gender { get; set; }
 
     public Collection<Parent> Parents { get; private set; } = new Collection<Parent>();
-    public Collection<Transaction> Transactions { get; private set; }  = new Collection<Transaction>();
+    public Collection<Transaction> Transactions { get; private set; } = new Collection<Transaction>();
 
     public Collection<StudentDepartment> StudentDepartment { get; private set; } = new Collection<StudentDepartment>();
     public Collection<TeacherStudent> TeacherStudents { get; private set; } = new Collection<TeacherStudent>();
+
+    public Collection<Lesson> Lessons { get; set; } = new Collection<Lesson>();
+    public Collection<Schedule> Schedules { get; set; } = new Collection<Schedule>();
 
     public void AddParent(Parent parent)
     {
@@ -61,6 +67,4 @@ public class Student : Entity
     {
         TeacherStudents.Add(teacherStudent);
     }
-    
-    
 }

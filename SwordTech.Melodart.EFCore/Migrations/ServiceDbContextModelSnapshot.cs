@@ -275,6 +275,124 @@ namespace SwordTech.Melodart.EFCore.Migrations
                     b.ToTable("Transactions");
                 });
 
+            modelBuilder.Entity("SwordTech.Melodart.Domain.Lessons.Lesson", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedUser")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("DayOfTheWeek")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("DepartmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeSpan>("TimeOfDay")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UpdatedUser")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("Lessons");
+                });
+
+            modelBuilder.Entity("SwordTech.Melodart.Domain.Lessons.Schedule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedUser")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("DayOfTheWeek")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("DepartmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LessonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ScheduleStatusType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ScheduleTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeSpan>("TimeOfDay")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UpdatedUser")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("LessonId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("Schedules");
+                });
+
             modelBuilder.Entity("SwordTech.Melodart.Domain.Students.Parent", b =>
                 {
                     b.Property<Guid>("Id")
@@ -303,6 +421,9 @@ namespace SwordTech.Melodart.EFCore.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ParentType")
+                        .HasColumnType("int");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -345,8 +466,8 @@ namespace SwordTech.Melodart.EFCore.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -742,6 +863,68 @@ namespace SwordTech.Melodart.EFCore.Migrations
                     b.Navigation("Teacher");
                 });
 
+            modelBuilder.Entity("SwordTech.Melodart.Domain.Lessons.Lesson", b =>
+                {
+                    b.HasOne("SwordTech.Melodart.Domain.Departments.Department", "Department")
+                        .WithMany("Lessons")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SwordTech.Melodart.Domain.Students.Student", "Student")
+                        .WithMany("Lessons")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SwordTech.Melodart.Domain.Teachers.Teacher", "Teacher")
+                        .WithMany("Lessons")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("SwordTech.Melodart.Domain.Lessons.Schedule", b =>
+                {
+                    b.HasOne("SwordTech.Melodart.Domain.Departments.Department", "Department")
+                        .WithMany("Schedules")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SwordTech.Melodart.Domain.Lessons.Lesson", "Lesson")
+                        .WithMany("Schedules")
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SwordTech.Melodart.Domain.Students.Student", "Student")
+                        .WithMany("Schedules")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SwordTech.Melodart.Domain.Teachers.Teacher", "Teacher")
+                        .WithMany("Schedules")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Teacher");
+                });
+
             modelBuilder.Entity("SwordTech.Melodart.Domain.Students.Parent", b =>
                 {
                     b.HasOne("SwordTech.Melodart.Domain.Students.Student", "Student")
@@ -812,7 +995,7 @@ namespace SwordTech.Melodart.EFCore.Migrations
             modelBuilder.Entity("SwordTech.Melodart.Domain._ManyToMany.TeacherStudent", b =>
                 {
                     b.HasOne("SwordTech.Melodart.Domain.Students.Student", "Student")
-                        .WithMany()
+                        .WithMany("TeacherStudents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -830,6 +1013,10 @@ namespace SwordTech.Melodart.EFCore.Migrations
 
             modelBuilder.Entity("SwordTech.Melodart.Domain.Departments.Department", b =>
                 {
+                    b.Navigation("Lessons");
+
+                    b.Navigation("Schedules");
+
                     b.Navigation("TeacherDepartments");
                 });
 
@@ -838,17 +1025,32 @@ namespace SwordTech.Melodart.EFCore.Migrations
                     b.Navigation("Transactions");
                 });
 
+            modelBuilder.Entity("SwordTech.Melodart.Domain.Lessons.Lesson", b =>
+                {
+                    b.Navigation("Schedules");
+                });
+
             modelBuilder.Entity("SwordTech.Melodart.Domain.Students.Student", b =>
                 {
+                    b.Navigation("Lessons");
+
                     b.Navigation("Parents");
 
+                    b.Navigation("Schedules");
+
                     b.Navigation("StudentDepartment");
+
+                    b.Navigation("TeacherStudents");
 
                     b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("SwordTech.Melodart.Domain.Teachers.Teacher", b =>
                 {
+                    b.Navigation("Lessons");
+
+                    b.Navigation("Schedules");
+
                     b.Navigation("TeacherDepartments");
 
                     b.Navigation("Transactions");

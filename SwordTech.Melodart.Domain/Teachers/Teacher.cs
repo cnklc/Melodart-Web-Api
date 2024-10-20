@@ -1,6 +1,7 @@
 using SwordTech.Melodart.Domain._ManyToMany;
 using System.Collections.ObjectModel;
 using SwordTech.Melodart.Domain.Finance;
+using SwordTech.Melodart.Domain.Lessons;
 using SwordTech.Melodart.Domain.Students;
 using SwordTech.Melodart.Helper.Entity;
 
@@ -30,8 +31,9 @@ public class Teacher : Entity
 
     public Collection<TeacherDepartment> TeacherDepartments { get; private set; } = new Collection<TeacherDepartment>();
     public Collection<Transaction> Transactions { get; private set; } = new Collection<Transaction>();
-    
-    
+    public Collection<Lesson> Lessons { get; set; } = new Collection<Lesson>();
+    public Collection<Schedule> Schedules { get; set; } = new Collection<Schedule>();
+
     public void AddTransactiont(Transaction transaction)
     {
         Transactions.Add(transaction);
