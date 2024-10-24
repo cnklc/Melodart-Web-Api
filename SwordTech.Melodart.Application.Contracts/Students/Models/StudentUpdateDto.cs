@@ -1,3 +1,5 @@
+using SwordTech.Melodart.Domain.Contracts.Student;
+
 namespace SwordTech.Melodart.Application.Contract.Students.Models;
 
 public class StudentUpdateDto
@@ -11,7 +13,7 @@ public class StudentUpdateDto
     public string? FathersName { get; set; }
     public string? FathersPhoneNumber { get; set; }
     public string? Description { get; set; }
-    public string? Gender { get; set; }
+    public GenderType Gender { get; set; }
 
     public string? Address { get; set; }
 }

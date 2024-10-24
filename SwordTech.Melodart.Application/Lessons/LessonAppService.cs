@@ -12,7 +12,7 @@ namespace SwordTech.Melodart.Application.Lessons
     {
         private IEfBaseRepository<Schedule> _scheduleRepository;
 
-        
+
         public LessonAppService(IEfBaseRepository<Lesson> repository, IMapper mapper, IEfBaseRepository<Schedule> scheduleRepository) : base(repository, mapper)
         {
             _scheduleRepository = scheduleRepository;
@@ -29,9 +29,8 @@ namespace SwordTech.Melodart.Application.Lessons
 
 
                     var times = CreateMonthlySchedule((DayOfWeek)input.DayOfTheWeek, TimeSpan.Parse(input.TimeOfDay), DateTime.Now);
-                    
-                   
-                    
+
+
                     times.ForEach(item =>
                     {
                         var schedule = new Schedule()
@@ -49,7 +48,7 @@ namespace SwordTech.Melodart.Application.Lessons
                         };
                         _scheduleRepository.Add(schedule);
                     });
-                    
+
                     await transaction.CommitAsync();
 
                     return await GetById(entity.Id);
@@ -63,8 +62,38 @@ namespace SwordTech.Melodart.Application.Lessons
 
             }
         }
-        
-        
+
+        public override async Task Delete(Guid id)
+        {
+            using (var transaction = _repository.BeginTransaction())
+            {
+                try
+                {
+                    var entity = _repository.GetById(id);
+                    
+                    if (entity != null)
+                    {
+                        _repository.Delete(entity);
+                        
+                        var schedules = _scheduleRepository.GetAll().Where(x=>x.LessonId == entity.Id  &&  x.ScheduleStatusType == ScheduleStatusType.Pending).ToList();
+                        
+                        foreach (var schedule in schedules)
+                        {
+                            _scheduleRepository.Delete(schedule);
+                        }
+                    }
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception e)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+
+            }
+        }
+
         public List<DateTime> CreateMonthlySchedule(DayOfWeek lessonDay, TimeSpan lessonTime, DateTime startDate)
         {
             // Bir ay süresince haftalık ders zamanlarını tutacak liste

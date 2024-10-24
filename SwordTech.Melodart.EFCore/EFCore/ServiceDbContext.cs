@@ -155,6 +155,7 @@ public class ServiceDbContext : IdentityDbContext<AppUser, AppRole, Guid>
                 .OnDelete(DeleteBehavior.NoAction);
         });
 
+        builder.Entity<Lesson>().HasQueryFilter(p => !p.IsDeleted);
         builder.Entity<Lesson>(b =>
         {
             b.HasOne(x => x.Department)
@@ -177,7 +178,8 @@ public class ServiceDbContext : IdentityDbContext<AppUser, AppRole, Guid>
                 .HasForeignKey(x => x.LessonId)
                 .OnDelete(DeleteBehavior.NoAction);
         });
-
+        
+        builder.Entity<Schedule>().HasQueryFilter(p => !p.IsDeleted);
         builder.Entity<Schedule>(b =>
         {
             b.HasOne(x => x.Department)

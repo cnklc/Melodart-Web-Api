@@ -15,6 +15,6 @@ public class StudentMapperProfile : Profile
             .ForMember(dest => dest.Lessons, opt => opt.MapFrom(src => src.Lessons))
             .ForMember(dest => dest.Parents, opt => opt.MapFrom(src => src.Parents));
         // CreateMap<StudentCreateDto, Student>();
-        // CreateMap<StudentUpdateDto, Student>();
+        CreateMap<StudentUpdateDto, Student>();
     }
 }
