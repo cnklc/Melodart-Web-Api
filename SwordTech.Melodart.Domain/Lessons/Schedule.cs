@@ -10,7 +10,7 @@ namespace SwordTech.Melodart.Domain.Lessons
     {
         public DateTime ScheduleTime { get; set; }
         public ScheduleStatusType ScheduleStatusType { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         
      
         public int DayOfTheWeek { get; set; }
@@ -28,5 +28,7 @@ namespace SwordTech.Melodart.Domain.Lessons
 
         public Guid LessonId { get; set; }
         public Lesson Lesson { get; set; }
+
+        public Guid? ScheduleId { get; set; } 
     }
 }

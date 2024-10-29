@@ -246,7 +246,6 @@ namespace SwordTech.Melodart.EFCore.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -347,7 +346,6 @@ namespace SwordTech.Melodart.EFCore.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Duration")
@@ -357,6 +355,9 @@ namespace SwordTech.Melodart.EFCore.Migrations
                         .HasColumnType("bit");
 
                     b.Property<Guid>("LessonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ScheduleId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("ScheduleStatusType")

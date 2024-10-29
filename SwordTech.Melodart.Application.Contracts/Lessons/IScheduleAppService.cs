@@ -7,4 +7,5 @@ namespace SwordTech.Melodart.Application.Contract.Lessons;
 public interface IScheduleAppService : IAppService<Schedule, ScheduleDto, ScheduleDto, ScheduleCreateDto, ScheduleUpdateDto>
 {
     Task<IList<ScheduleDto>> GetToday();
+    Task<ScheduleDto> CreateCompensationSchedule(CreateCompensationScheduleDto input);
 }

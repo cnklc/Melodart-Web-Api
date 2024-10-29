@@ -15,5 +15,8 @@ namespace SwordTech.Melodart.Domain.Contracts.Lessons
         
         [Display(Name = "Ertelendi")]
         Deferred = 3,
+        
+        [Display(Name = "Telafi Dersi Oluşturuldu")]
+        LessonCreated = 4,
     }
 }

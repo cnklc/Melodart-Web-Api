@@ -25,6 +25,17 @@ public class ScheduleController : BaseApiController
 
         return Success(data);
     }
+    
+    [HttpPost("create-compensation-schedule")]
+    [ProducesResponseType(typeof(ApiResponse<ScheduleDto>), 200)]
+    [ProducesResponseType(typeof(ApiResponse), 400)]
+    [ProducesResponseType(typeof(ApiResponse), 500)]
+    public async Task<IActionResult> Post([FromBody] CreateCompensationScheduleDto model)
+    {
+        var data = await _scheduleAppService.CreateCompensationSchedule(model);
+
+        return Success(data);
+    }
 
     [HttpGet]
     [ProducesResponseType(typeof(ApiResponse<List<ScheduleDto>>), 200)]

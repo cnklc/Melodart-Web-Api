@@ -18,10 +18,51 @@ namespace SwordTech.Melodart.Application.Lessons
         {
             return (await base.GetAll()).OrderBy(x => x.ScheduleTime).ToList();
         }
-        
+
         public async Task<IList<ScheduleDto>> GetToday()
         {
-            return (await base.GetAll(x=>x.ScheduleTime.Date == DateTime.Now.Date && x.ScheduleStatusType == ScheduleStatusType.Pending)).OrderBy(x => x.ScheduleTime).ToList();
+            return (await base.GetAll(x => x.ScheduleTime.Date <= DateTime.Now.Date && x.ScheduleStatusType == ScheduleStatusType.Pending)).OrderBy(x => x.ScheduleTime).ToList();
+        }
+
+        public async Task<ScheduleDto> CreateCompensationSchedule(CreateCompensationScheduleDto input)
+        {
+            using (var transaction = _repository.BeginTransaction())
+            {
+                try
+                {
+                    Schedule oldSchedule = _repository.GetById(input.ScheduleId);
+                    oldSchedule.ScheduleStatusType = ScheduleStatusType.LessonCreated;
+                    
+                    _repository.Update(oldSchedule);
+
+                    var date = input.Date.Add(TimeSpan.Parse(input.Time));
+
+                    Schedule newSchedule = new Schedule()
+                    {
+                        StudentId = oldSchedule.StudentId,
+                        DepartmentId = oldSchedule.DepartmentId,
+                        TeacherId = oldSchedule.TeacherId,
+                        ScheduleId = oldSchedule.Id,
+                        LessonId = oldSchedule.LessonId,
+                        ScheduleStatusType = ScheduleStatusType.Pending,
+                        DayOfTheWeek = oldSchedule.DayOfTheWeek,
+                        TimeOfDay = oldSchedule.TimeOfDay,
+                        Duration = oldSchedule.Duration,
+                        ScheduleTime = date,
+                    };
+
+                    _repository.Add(newSchedule);
+                    await transaction.CommitAsync();
+                    
+                    return await GetById(newSchedule.Id);
+                }
+                catch (Exception e)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
+
         }
 
         public override async Task<ScheduleDto> Update(Guid id, ScheduleUpdateDto input)
@@ -43,6 +84,6 @@ namespace SwordTech.Melodart.Application.Lessons
 
             return await GetById(entity.Id);
         }
-       
+
     }
 }
