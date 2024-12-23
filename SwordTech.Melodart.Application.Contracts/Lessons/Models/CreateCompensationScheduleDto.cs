@@ -1,3 +1,5 @@
+
+ 
 namespace SwordTech.Melodart.Application.Contract.Lessons.Models
 {
     public class CreateCompensationScheduleDto
@@ -6,4 +8,5 @@ namespace SwordTech.Melodart.Application.Contract.Lessons.Models
         public DateTime Date { get; set; }
         public string Time { get; set; }
     }
+
 }

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SwordTech.Melodart.Application.Base;
 using SwordTech.Melodart.Application.Contract.Lessons;
 using SwordTech.Melodart.Application.Contract.Lessons.Models;
@@ -28,7 +29,7 @@ namespace SwordTech.Melodart.Application.Lessons
                     _repository.Add(entity);
 
 
-                    var times = CreateMonthlySchedule((DayOfWeek)input.DayOfTheWeek, TimeSpan.Parse(input.TimeOfDay), DateTime.Now);
+                    var times = CreateScheduleDate((DayOfWeek)input.DayOfTheWeek, TimeSpan.Parse(input.TimeOfDay), DateTime.Now);
 
 
                     times.ForEach(item =>
@@ -70,13 +71,13 @@ namespace SwordTech.Melodart.Application.Lessons
                 try
                 {
                     var entity = _repository.GetById(id);
-                    
+
                     if (entity != null)
                     {
                         _repository.Delete(entity);
-                        
-                        var schedules = _scheduleRepository.GetAll().Where(x=>x.LessonId == entity.Id  &&  x.ScheduleStatusType == ScheduleStatusType.Pending).ToList();
-                        
+
+                        var schedules = _scheduleRepository.GetAll().Where(x => x.LessonId == entity.Id && x.ScheduleStatusType == ScheduleStatusType.Pending).ToList();
+
                         foreach (var schedule in schedules)
                         {
                             _scheduleRepository.Delete(schedule);
@@ -94,7 +95,7 @@ namespace SwordTech.Melodart.Application.Lessons
             }
         }
 
-        public List<DateTime> CreateMonthlySchedule(DayOfWeek lessonDay, TimeSpan lessonTime, DateTime startDate)
+        public List<DateTime> CreateScheduleDate(DayOfWeek lessonDay, TimeSpan lessonTime, DateTime startDate)
         {
             // Bir ay süresince haftalık ders zamanlarını tutacak liste
             List<DateTime> schedule = new List<DateTime>();
@@ -112,13 +113,65 @@ namespace SwordTech.Melodart.Application.Lessons
             DateTime firstLesson = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, lessonTime.Hours, lessonTime.Minutes, 0);
 
             // Dersin 4 hafta boyunca planlanmasını yap
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 53; i++)
             {
-                schedule.Add(firstLesson);
-                firstLesson = firstLesson.AddDays(7); // Bir sonraki haftaya geç
+                if (firstLesson.Year == DateTime.Now.Year)
+                {
+                    schedule.Add(firstLesson);
+                    firstLesson = firstLesson.AddDays(7); // Bir sonraki haftaya geç
+                }
+
             }
 
             return schedule;
         }
+
+        public async Task<bool> GenerateSchedule()
+        {
+
+            using (var transaction = _repository.BeginTransaction())
+            {
+                try
+                {
+                    var lessons = _repository.GetAll().Include(x => x.Schedules).ToList();
+
+                    foreach (var lesson in lessons)
+                    {
+                        var s = lesson.Schedules.OrderBy(x => x.CreatedDate).Last();
+
+                        DateTime scheduleDate = s.ScheduleTime.AddDays(7);
+
+                        while (!lesson.IsDeleted && scheduleDate.Year <= DateTime.Now.Year)
+                        {
+                            var schedule = new Schedule()
+                            {
+                                ScheduleStatusType = ScheduleStatusType.Pending,
+                                ScheduleTime = scheduleDate,
+                                DayOfTheWeek = lesson.DayOfTheWeek,
+                                TimeOfDay = lesson.TimeOfDay,
+                                Duration = lesson.Duration,
+                                TeacherId = lesson.TeacherId,
+                                DepartmentId = lesson.DepartmentId,
+                                StudentId = lesson.StudentId,
+                                LessonId = lesson.Id,
+                                Description = ""
+                            };
+                            _scheduleRepository.Add(schedule);
+                            
+                            scheduleDate = scheduleDate.AddDays(7);
+                        }
+
+                    }
+                    transaction.Commit();
+
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                }
+            }
+            return true;
+        }
     }
+
 }

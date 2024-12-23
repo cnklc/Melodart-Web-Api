@@ -32,7 +32,7 @@ namespace SwordTech.Melodart.Application.Lessons
                 {
                     Schedule oldSchedule = _repository.GetById(input.ScheduleId);
                     oldSchedule.ScheduleStatusType = ScheduleStatusType.LessonCreated;
-                    
+
                     _repository.Update(oldSchedule);
 
                     var date = input.Date.Add(TimeSpan.Parse(input.Time));
@@ -53,7 +53,7 @@ namespace SwordTech.Melodart.Application.Lessons
 
                     _repository.Add(newSchedule);
                     await transaction.CommitAsync();
-                    
+
                     return await GetById(newSchedule.Id);
                 }
                 catch (Exception e)
@@ -85,5 +85,43 @@ namespace SwordTech.Melodart.Application.Lessons
             return await GetById(entity.Id);
         }
 
+        public async Task<ScheduleDto> ChangeSchedule(SchedulChangeDto input)
+        {
+            using (var transaction = _repository.BeginTransaction())
+            {
+                try
+                {
+                    var entity = _repository.GetById(input.Id);
+
+                    entity.ScheduleStatusType = ScheduleStatusType.Deferred;
+
+                    var newEntity = new Schedule()
+                    {
+                        ScheduleId = entity.Id,
+                        LessonId = entity.LessonId,
+                        DepartmentId = entity.DepartmentId,
+                        TeacherId = entity.TeacherId,
+                        StudentId = entity.StudentId,
+                        DayOfTheWeek = entity.DayOfTheWeek,
+                        TimeOfDay = entity.TimeOfDay,
+                        Duration = entity.Duration,
+                        ScheduleStatusType = ScheduleStatusType.Pending,
+                        ScheduleTime = input.NewDate
+                    };
+
+                    _repository.Update(entity);
+                    _repository.Add(newEntity);
+                    
+                    await transaction.CommitAsync();
+
+                    return await GetById(newEntity.Id);
+                }
+                catch (Exception e)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
+        }
     }
 }

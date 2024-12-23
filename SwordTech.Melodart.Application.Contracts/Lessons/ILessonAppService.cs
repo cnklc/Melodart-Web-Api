@@ -6,4 +6,5 @@ namespace SwordTech.Melodart.Application.Contract.Lessons;
 
 public interface ILessonAppService : IAppService<Lesson, LessonDto, LessonDto, LessonCreateDto, LessonUpdateDto>
 {
+    Task<bool> GenerateSchedule();
 }

@@ -8,4 +8,5 @@ public interface IScheduleAppService : IAppService<Schedule, ScheduleDto, Schedu
 {
     Task<IList<ScheduleDto>> GetToday();
     Task<ScheduleDto> CreateCompensationSchedule(CreateCompensationScheduleDto input);
+    Task<ScheduleDto> ChangeSchedule(SchedulChangeDto input);
 }

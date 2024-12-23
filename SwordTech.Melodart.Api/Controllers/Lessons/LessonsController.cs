@@ -71,5 +71,16 @@ namespace SwordTech.Melodart.Api.Controllers.Lessons
 
             return Success("Deleted successfully.");
         }
+        
+        [HttpGet("generate-schedule")]
+        [ProducesResponseType(typeof(ApiResponse<ScheduleDto>), 200)]
+        [ProducesResponseType(typeof(ApiResponse), 400)]
+        [ProducesResponseType(typeof(ApiResponse), 500)]
+        public async Task<IActionResult> GenerateSchedule()
+        {
+            var data =await _lessonAppService.GenerateSchedule();
+
+            return Success(data);
+        }
     }
 }
