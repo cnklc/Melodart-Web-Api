@@ -1,4 +1,5 @@
 using SwordTech.Melodart.Domain._ManyToMany;
+using SwordTech.Melodart.Domain.Lessons;
 using SwordTech.Melodart.Domain.Teachers;
 using SwordTech.Melodart.Helper.Entity;
 using SwordTech.Melodart.Helper.Error;
@@ -27,4 +28,6 @@ public class Department : Entity
     public string Description { get; private set; }
 
     public Collection<TeacherDepartment> TeacherDepartments { get; set; } = new Collection<TeacherDepartment>();
+    public Collection<Lesson> Lessons { get; set; } = new Collection<Lesson>();
+    public Collection<Schedule> Schedules { get; set; } = new Collection<Schedule>();
 }

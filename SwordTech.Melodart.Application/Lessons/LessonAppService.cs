@@ -1,0 +1,182 @@
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using SwordTech.Melodart.Application.Base;
+using SwordTech.Melodart.Application.Contract.Lessons;
+using SwordTech.Melodart.Application.Contract.Lessons.Models;
+using SwordTech.Melodart.Domain.Contracts.Lessons;
+using SwordTech.Melodart.Domain.Lessons;
+using SwordTech.Melodart.EFCore.Repositories.Base;
+
+namespace SwordTech.Melodart.Application.Lessons
+{
+    public class LessonAppService : AppService<Lesson, LessonDto, LessonDto, LessonCreateDto, LessonUpdateDto>, ILessonAppService
+    {
+        private IEfBaseRepository<Schedule> _scheduleRepository;
+
+
+        public LessonAppService(IEfBaseRepository<Lesson> repository, IMapper mapper, IEfBaseRepository<Schedule> scheduleRepository) : base(repository, mapper)
+        {
+            _scheduleRepository = scheduleRepository;
+        }
+
+        public override async Task<LessonDto> Create(LessonCreateDto input)
+        {
+            using (var transaction = _repository.BeginTransaction())
+            {
+                try
+                {
+                    var entity = _mapper.Map<Lesson>(input);
+                    _repository.Add(entity);
+
+
+                    var times = CreateScheduleDate((DayOfWeek)input.DayOfTheWeek, TimeSpan.Parse(input.TimeOfDay), DateTime.Now);
+
+
+                    times.ForEach(item =>
+                    {
+                        var schedule = new Schedule()
+                        {
+                            ScheduleStatusType = ScheduleStatusType.Pending,
+                            ScheduleTime = item,
+                            DayOfTheWeek = input.DayOfTheWeek,
+                            TimeOfDay = TimeSpan.Parse(input.TimeOfDay),
+                            Duration = input.Duration,
+                            TeacherId = input.TeacherId,
+                            DepartmentId = input.DepartmentId,
+                            StudentId = input.StudentId,
+                            LessonId = entity.Id,
+                            Description = ""
+                        };
+                        _scheduleRepository.Add(schedule);
+                    });
+
+                    await transaction.CommitAsync();
+
+                    return await GetById(entity.Id);
+
+                }
+                catch (Exception e)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+
+            }
+        }
+
+        public override async Task Delete(Guid id)
+        {
+            using (var transaction = _repository.BeginTransaction())
+            {
+                try
+                {
+                    var entity = _repository.GetById(id);
+
+                    if (entity != null)
+                    {
+                        _repository.Delete(entity);
+
+                        var schedules = _scheduleRepository.GetAll().Where(x => x.LessonId == entity.Id && x.ScheduleStatusType == ScheduleStatusType.Pending).ToList();
+
+                        foreach (var schedule in schedules)
+                        {
+                            _scheduleRepository.Delete(schedule);
+                        }
+                    }
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception e)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+
+            }
+        }
+
+        public List<DateTime> CreateScheduleDate(DayOfWeek lessonDay, TimeSpan lessonTime, DateTime startDate)
+        {
+            // Bir ay süresince haftalık ders zamanlarını tutacak liste
+            List<DateTime> schedule = new List<DateTime>();
+
+            // Bir sonraki dersin tarihini hesaplamak için başlangıç günü
+            DateTime currentDate = startDate;
+
+            // Eğer başlangıç tarihi belirtilen haftanın gününden önceyse, o günü bulana kadar ilerlet
+            while (currentDate.DayOfWeek != lessonDay)
+            {
+                currentDate = currentDate.AddDays(1);
+            }
+
+            // İlk dersi oluştur ve saati ayarla
+            DateTime firstLesson = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, lessonTime.Hours, lessonTime.Minutes, 0);
+
+            // Dersin 4 hafta boyunca planlanmasını yap
+            for (int i = 0; i < 53; i++)
+            {
+                // if (firstLesson.Year == DateTime.Now.Year + 1 )
+                // {
+                    schedule.Add(firstLesson);
+                    firstLesson = firstLesson.AddDays(7); // Bir sonraki haftaya geç
+                // }
+
+            }
+
+            return schedule;
+        }
+
+        public async Task<bool> GenerateSchedule()
+        {
+
+            using (var transaction = _repository.BeginTransaction())
+            {
+                try
+                {
+                    var lessons = _repository.GetAll().Include(x => x.Schedules).ToList();
+
+                    foreach (var lesson in lessons)
+                    {
+                        var s = lesson.Schedules.OrderBy(x => x.CreatedDate).Last();
+
+                        DateTime scheduleDate = s.ScheduleTime.AddDays(7);
+
+                        while (!lesson.IsDeleted && scheduleDate.Year <= DateTime.Now.Year)
+                        {
+                            var schedule = new Schedule()
+                            {
+                                ScheduleStatusType = ScheduleStatusType.Pending,
+                                ScheduleTime = scheduleDate,
+                                DayOfTheWeek = lesson.DayOfTheWeek,
+                                TimeOfDay = lesson.TimeOfDay,
+                                Duration = lesson.Duration,
+                                TeacherId = lesson.TeacherId,
+                                DepartmentId = lesson.DepartmentId,
+                                StudentId = lesson.StudentId,
+                                LessonId = lesson.Id,
+                                Description = ""
+                            };
+                            _scheduleRepository.Add(schedule);
+                            
+                            scheduleDate = scheduleDate.AddDays(7);
+                        }
+
+                    }
+                    transaction.Commit();
+
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                }
+            }
+            return true;
+        }
+        
+        public Task<IList<LessonDto>> GetLessonsByStudentId(Guid studentId)
+        {
+            return base.GetAll(x => x.StudentId == studentId);
+        }
+    }
+
+}

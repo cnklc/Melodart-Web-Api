@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using SwordTech.Melodart.EFCore.EFCore;
 using SwordTech.Melodart.Helper.Entity;
 
@@ -45,5 +46,10 @@ public class EfBaseRepository<TEntity> : IEfBaseRepository<TEntity> where TEntit
     {
         _dbSet.Remove(entity);
         _context.SaveChanges();
+    }
+
+    public IDbContextTransaction BeginTransaction()
+    {
+        return _context.Database.BeginTransaction();
     }
 }

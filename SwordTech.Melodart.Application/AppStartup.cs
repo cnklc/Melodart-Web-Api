@@ -7,6 +7,7 @@ using SwordTech.Melodart.Application.Contract.Base;
 using SwordTech.Melodart.Application.Contract.Classes;
 using SwordTech.Melodart.Application.Contract.Departments;
 using SwordTech.Melodart.Application.Contract.Finance;
+using SwordTech.Melodart.Application.Contract.Lessons;
 using SwordTech.Melodart.Application.Contract.Students;
 using SwordTech.Melodart.Application.Contract.Teachers;
 using SwordTech.Melodart.Application.Contract.Users;
@@ -14,6 +15,7 @@ using SwordTech.Melodart.Application.Contract.Users.Models;
 using SwordTech.Melodart.Application.Contract.Users.Validators;
 using SwordTech.Melodart.Application.Departments;
 using SwordTech.Melodart.Application.Finances;
+using SwordTech.Melodart.Application.Lessons;
 using SwordTech.Melodart.Application.Students;
 using SwordTech.Melodart.Application.Teachers;
 using SwordTech.Melodart.Application.Users;
@@ -65,6 +67,8 @@ public class AppStartup
         services.AddTransient<IStudentAppService, StudentAppService>();
         services.AddTransient<IParentAppService, ParentAppService>();
         services.AddTransient<ITeacherAppService, TeacherAppService>();
+        services.AddTransient<ILessonAppService, LessonAppService>();
+        services.AddTransient<IScheduleAppService, ScheduleAppService>();
 
         // Helper
         // services.AddTransient<IMailService, MailService>(); // smtp bilgilerini kontrol et

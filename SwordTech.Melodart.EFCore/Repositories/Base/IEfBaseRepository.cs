@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Storage;
 using SwordTech.Melodart.Helper.Entity;
 
 namespace SwordTech.Melodart.EFCore.Repositories.Base;
@@ -9,4 +10,6 @@ public interface IEfBaseRepository<TEntity> where TEntity : IEntity, new()
     public void Add(TEntity entity);
     public void Update(TEntity entity);
     public void Delete(TEntity entity);
+
+    public IDbContextTransaction BeginTransaction();
 }

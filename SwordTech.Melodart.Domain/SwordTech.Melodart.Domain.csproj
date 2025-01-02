@@ -13,6 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\SwordTech.Melodart.Domain.Contracts\SwordTech.Melodart.Domain.Contracts.csproj" />
       <ProjectReference Include="..\SwordTech.Melodart.Helper\SwordTech.Melodart.Helper.csproj" />
     </ItemGroup>
 

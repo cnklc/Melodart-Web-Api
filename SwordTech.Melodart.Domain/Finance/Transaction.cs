@@ -7,15 +7,8 @@ namespace SwordTech.Melodart.Domain.Finance;
 
 public class Transaction : Entity
 {
-    public Transaction(string description, decimal amount)
+    public Transaction(string? description, decimal amount)
     {
-        if (string.IsNullOrEmpty(description))
-        {
-            throw new DomainException("Açıklama alanı boş olamaz.");
-        }
-
-        // Id = Guid.NewGuid();
-
         Description = description;
         Amount = amount;
     }
@@ -24,7 +17,7 @@ public class Transaction : Entity
     {
     }
 
-    public string Description { get; private set; }
+    public string? Description { get; private set; }
     public decimal Amount { get; private set; }
 
     public Guid AccountId { get; private set; }
@@ -56,7 +49,7 @@ public class Transaction : Entity
         Student = student;
         StudentId = student.Id;
     }
-    
+
     public void AddTeacher(Teacher teacher)
     {
         Teacher = teacher;
