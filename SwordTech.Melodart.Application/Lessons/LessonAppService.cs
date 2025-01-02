@@ -115,11 +115,11 @@ namespace SwordTech.Melodart.Application.Lessons
             // Dersin 4 hafta boyunca planlanmasını yap
             for (int i = 0; i < 53; i++)
             {
-                if (firstLesson.Year == DateTime.Now.Year)
-                {
+                // if (firstLesson.Year == DateTime.Now.Year + 1 )
+                // {
                     schedule.Add(firstLesson);
                     firstLesson = firstLesson.AddDays(7); // Bir sonraki haftaya geç
-                }
+                // }
 
             }
 
@@ -171,6 +171,11 @@ namespace SwordTech.Melodart.Application.Lessons
                 }
             }
             return true;
+        }
+        
+        public Task<IList<LessonDto>> GetLessonsByStudentId(Guid studentId)
+        {
+            return base.GetAll(x => x.StudentId == studentId);
         }
     }
 

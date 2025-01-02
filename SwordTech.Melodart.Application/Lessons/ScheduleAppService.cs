@@ -123,5 +123,9 @@ namespace SwordTech.Melodart.Application.Lessons
                 }
             }
         }
+        public Task<IList<ScheduleDto>> GetScheduleByLessonId(Guid lessonId)
+        {
+            return base.GetAll(x => x.LessonId == lessonId);
+        }
     }
 }

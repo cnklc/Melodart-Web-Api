@@ -102,4 +102,15 @@ public class ScheduleController : BaseApiController
 
         return Success("Deleted successfully.");
     }
+    
+    [HttpGet("get-schedules-by-lesson-id/{lessonId}")]
+    [ProducesResponseType(typeof(ApiResponse<LessonDto>), 200)]
+    [ProducesResponseType(typeof(ApiResponse), 400)]
+    [ProducesResponseType(typeof(ApiResponse), 500)]
+    public async Task<IActionResult> GetLessonsByStudentId(Guid lessonId)
+    {
+        var data = await _scheduleAppService.GetScheduleByLessonId(lessonId);
+
+        return Success(data);
+    }
 }

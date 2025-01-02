@@ -78,7 +78,18 @@ namespace SwordTech.Melodart.Api.Controllers.Lessons
         [ProducesResponseType(typeof(ApiResponse), 500)]
         public async Task<IActionResult> GenerateSchedule()
         {
-            var data =await _lessonAppService.GenerateSchedule();
+            var data = await _lessonAppService.GenerateSchedule();
+
+            return Success(data);
+        }
+        
+        [HttpGet("get-lessons-by-student-id/{studentId}")]
+        [ProducesResponseType(typeof(ApiResponse<LessonDto>), 200)]
+        [ProducesResponseType(typeof(ApiResponse), 400)]
+        [ProducesResponseType(typeof(ApiResponse), 500)]
+        public async Task<IActionResult> GetLessonsByStudentId(Guid studentId)
+        {
+            var data = await _lessonAppService.GetLessonsByStudentId(studentId);
 
             return Success(data);
         }
